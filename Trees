@@ -1,0 +1,60 @@
+#include <iostream>
+using namespace std;
+
+struct Node{
+    int value;
+    Node* left;
+    Node* right;
+
+};
+
+Node* createNode(int data){
+    Node* newNode = new Node();
+    newNode->value = data;
+    newNode->left = newNode->right = nullptr;
+    return newNode;
+
+}
+
+void printTree_preorder(Node* root){ //data , left, right
+    if(root == nullptr) return;
+    cout << root->value <<endl;
+    printTree_preorder(root->left);
+    printTree_preorder(root->right);
+
+}
+
+void printTree_inorder(Node* root){ //left , data, right
+    if(root == nullptr) return;
+    printTree_inorder(root->left);
+    cout << root->value <<endl;
+    printTree_inorder(root->right);
+
+}
+
+void printTree_postorder(Node* root){ //left , right, data
+    if(root == nullptr) return;
+    printTree_inorder(root->left);
+    printTree_inorder(root->right);
+    cout << root->value <<endl;
+
+}
+
+int main(){
+    Node* root = createNode(1);
+    root->left = createNode(2);
+    root->right = createNode(3);
+    root->left->left = createNode(4);
+
+     cout << "\n\n" << endl;
+    cout << "inorder: " << endl;
+    printTree_inorder(root);
+
+    cout << "\n\n" << endl;
+    cout << "Preorder: " << endl;
+    printTree_preorder(root);
+
+    cout << "\n\n" << endl;
+    cout << "postorder: " << endl;
+    printTree_postorder(root);
+}
