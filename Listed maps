@@ -1,0 +1,27 @@
+#include<iostream>
+#include<map>
+#include<list>
+#include<string>
+
+using namespace std;
+
+int main(){
+    map<string, list<string>>pokedex;
+
+    list<string>pikachu{"Tail lash", "Electrocute"};
+    list<string>godzilla{"Radioactive breath", "Roar"};
+    list<string>kong{"Monke", "Axe body spray"};
+
+    pokedex.insert(pair<string, list<string>>("pikachu", pikachu));
+    pokedex.insert(pair<string, list<string>>("godzilla", godzilla));
+    pokedex.insert(pair<string, list<string>>("kong", kong));
+
+
+    for(auto pair : pokedex){
+        cout<<pair.first<<" - ";
+        for(auto attack : pair.second){
+            cout<<attack<<", ";
+    }
+    cout<<endl;
+    }
+}
