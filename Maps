@@ -1,0 +1,37 @@
+#include <iostream>
+#include<string>
+#include<map>
+
+using namespace std;
+
+void printMap(map<string,string>dictionary){
+    cout<<"Pashto dictionary: \n";
+    for (auto pair: dictionary){
+        cout<<pair.first<<" - "<<pair.second<<endl;
+    }
+}
+
+int main(){
+    map<string,string>dictionary;
+
+    dictionary.insert(pair<string,string>("Donkey", "Khar"));
+    dictionary.insert(pair<string,string>("Dog", "Spay"));
+    dictionary.insert(pair<string,string>("Water", "Ubo"));
+
+    cout<<"Number of elements in dictionary - "<<dictionary.size()<<endl;
+    printMap(dictionary);
+    cout<<endl;
+    cout<<dictionary["Donkey"]<<endl; //outputs value of key donkey
+    dictionary["Donkey"] = "khar"; //change value of key
+    cout<<dictionary["Donkey"]<<endl;
+    cout<<endl;
+    dictionary.erase("Donkey"); //delete an element
+    printMap(dictionary);
+    cout<<endl;
+
+    dictionary.clear();
+    cout<<"Size after clearing: "<<dictionary.size()<<endl;
+
+
+
+}
