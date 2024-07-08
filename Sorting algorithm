@@ -1,0 +1,87 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+class Student{
+public:
+string name;
+int grade;
+Student(){}
+Student(string a, int b){
+    name = a;
+    grade = b;
+}
+};
+
+bool compareByGrade_ascending(Student s1, Student s2){
+    return s1.grade < s2.grade;
+}
+
+bool compareByGrade_descending(Student s1, Student s2){
+    return s1.grade > s2.grade;
+}
+
+bool compareByName_ascending(Student s1, Student s2){
+    return s1.name < s2.name;
+}
+
+bool compareByName_descending(Student s1, Student s2){
+    return s1.name > s2.name;
+}
+
+void display(Student s1[]){
+    for(int i = 0; i < 5; i++){
+        cout << s1[i].name << "\t" << s1[i].grade << endl;
+    }
+}
+
+int main(){
+Student students[5] = {
+    {"Alex", 1},
+    {"Ali", 6},
+    {"Barry", 15},
+    {"Patrick", 87},
+    {"Sabrina", 67}
+};
+
+cout<<"Initial list:\n";
+display(students);
+cout<<"\n\n";
+
+cout<<"Grade by ascending order: "<<endl;
+sort(students, students+5, compareByGrade_ascending); //3 parameters, pointer to first and last element, implementation
+display(students);
+cout<<"\n\n";
+
+cout<<"Grade by descending order: "<<endl;
+sort(students, students+5, compareByGrade_descending);
+display(students);
+cout<<"\n\n";
+
+cout<<"Name by ascending order: "<<endl;
+sort(students, students+5, compareByName_ascending);
+display(students);
+cout<<"\n\n";
+
+cout<<"Name by descending order: "<<endl;
+sort(students, students+5, compareByName_descending);
+display(students);
+cout<<"\n\n";
+
+cout<<"Reversed: "<<endl;
+reverse(students, students+5); // 2 paramters, pointer to first and last element
+display(students);
+cout<<"\n\n";
+
+cout<<"Max grade student"<<endl;
+Student* s_max;
+s_max = max_element(students, students+5, compareByGrade_ascending);  //3 parameters, pointer to first and last element, implementation
+cout<<s_max->name<<"\t"<<s_max->grade;
+cout<<"\n\n";
+
+cout<<"Min grade student"<<endl;
+Student* s_min;
+s_min = min_element(students, students+5, compareByGrade_ascending);  //3 parameters, pointer to first and last element, implementation
+cout<<s_min->name<<"\t"<<s_min->grade;
+cout<<"\n\n";
+}
