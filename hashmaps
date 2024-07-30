@@ -1,0 +1,89 @@
+#include <iostream>
+#include <list>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+class KeyValuePair {
+public:
+    string key;
+    int value;
+
+    KeyValuePair(string k, int v) : key(k), value(v) {}
+};
+
+class HashMap {
+private:
+    vector<list<KeyValuePair>> table;
+    int size;
+
+    int hash_function(const string& key) {
+        int hash = 0;
+        for (char ch : key) {
+            hash += ch;
+        }
+        return hash % size;
+    }
+
+public:
+    HashMap(int s) : size(s) {
+        table.resize(size);
+    }
+
+    void insert(const string& key, int value) {
+        int index = hash_function(key);
+        for (auto& pair : table[index]) {
+            if (pair.key == key) {
+                pair.value = value;
+                return;
+            }
+        }
+        table[index].emplace_back(key, value);
+    }
+
+    bool remove(const string& key) {
+        int index = hash_function(key);
+        for (auto it = table[index].begin(); it != table[index].end(); ++it) {
+            if (it->key == key) {
+                table[index].erase(it);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    int lookup(const string& key) {
+        int index = hash_function(key);
+        for (auto& pair : table[index]) {
+            if (pair.key == key) {
+                return pair.value;
+            }
+        }
+        return -1; 
+    }
+};
+
+int main() {
+    HashMap epic_war(10);
+    //adding units
+    epic_war.insert("hobbit", 1);
+    epic_war.insert("goblin", 2);
+    epic_war.insert("centaur", 3);
+    epic_war.insert("white tiger", 4);
+    epic_war.insert("golem", 5);
+    string unit;
+    cout<<"Check if a unit is in the formation for battle: "<<endl;
+    cin>>unit;
+    if(epic_war.lookup(unit) != -1){
+    cout<<"Unit is found at formation number "<<epic_war.lookup(unit) <<endl;
+    }else{
+        cout<<"Unit not in formation"<<endl;
+    }
+
+    cout<<"Remove a unit: "<<endl;
+    cin>>unit;
+    epic_war.remove(unit);
+
+    return 0;
+}
