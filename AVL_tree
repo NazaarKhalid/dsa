@@ -1,0 +1,166 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int key;
+    Node* right;
+    Node* left;
+    int height;
+    Node(int v) {
+        key = v;
+        height = 1;
+        right = nullptr;
+        left = nullptr;
+    }
+};
+
+int getHeight(Node*root){
+    if(root == nullptr)return 0;
+    return root->height;
+}
+
+int getBF(Node*root){
+    if(root == nullptr)return 0;
+    return getHeight(root->left) - getHeight(root->right);
+}
+
+Node* rotateRight(Node*x){
+    Node* y = x->left;
+    Node*T2 = y ->right;
+    y->right = x;
+    x->left = T2;
+    y->height = max(getHeight(y->left), getHeight(y->right))+1;
+    x->height = max(getHeight(x->left), getHeight(x->right))+1;
+    return y;
+    
+}
+
+Node* rotateLeft(Node*y){
+    Node* x = y->right;
+    Node*T2 = x ->left;
+    x->left = y;
+    y->right = T2;
+    y->height = max(getHeight(y->left), getHeight(y->right))+1;
+    x->height = max(getHeight(x->left), getHeight(x->right))+1;
+    return x;
+}
+
+
+
+Node* Balance(Node* root) {
+    int balanceFactor = getBF(root);
+
+    if (balanceFactor > 1) {//LL case of unbalance
+        if (getBF(root->left) >= 0) {
+            return rotateRight(root);
+        }
+        else {//LR case of unbalance
+            root->left = rotateLeft(root->left); //to fix the balance of left node of root
+            return rotateRight(root); // return the rotated right node 
+        }
+    }
+
+    if (balanceFactor < -1) {
+
+        if (getBF(root->right) <= 0) {//RR case of unbalance
+            return rotateLeft(root);
+        }
+        else {//RL case of unbalance
+            root->right = rotateRight(root->right);// this will fix the balance of the right node of root
+            return rotateLeft(root); // this will return the balanced root(root has been rotated left)
+        }
+    }
+
+    return root;
+}
+
+Node* insert(Node* root, int value) {
+    
+    if (root == nullptr) return new Node(value);
+
+    if (value < root->key) {
+        root->left = insert(root->left, value);
+    }
+    else if (value > root->key) {
+        root->right = insert(root->right, value);
+    }
+
+    root->height = max(getHeight(root->left), getHeight(root->right)) + 1;
+
+    return Balance(root);
+    
+}
+
+Node* findMin(Node* root) {
+    if (root == nullptr) return root;
+
+    if (root->left == nullptr) return root;
+
+    return findMin(root->left);
+}
+
+Node* deleteBST(Node* root, int value) {
+    if (root == nullptr) return root;
+
+    if (value < root->key) {
+        root->left = deleteBST(root->left, value);
+    }
+    else if (value > root->key) {
+        root->right = deleteBST(root->right, value);
+    } else {
+        if (root->left == nullptr && root->right == nullptr) {
+            delete root;
+            return nullptr;
+        }
+        else if (root->left == nullptr) {
+            Node* temp = root->right;
+            delete root;
+            return temp;
+        }
+        else if (root->right == nullptr) {
+            Node* temp = root->left;
+            delete root;
+            return temp;
+        }
+        else {
+            Node* temp = findMin(root->right);
+            root->key = temp->key;
+            root->right = deleteBST(root->right, temp->key);
+        }
+    }
+
+    root->height = max(getHeight(root->left), getHeight(root->right)) + 1;
+
+    return Balance(root);
+}
+
+void inorder(Node* root) {
+    if (root == nullptr) return;
+
+    inorder(root->left);
+    cout << root->key << " ";
+    inorder(root->right);
+}
+
+
+int main() {
+    Node *root = nullptr;
+
+    cout<<"Inserted 10, 20, 30, 15, 25, 5 in the AVL tree"<<endl;
+
+    root = insert(root, 10);
+    root = insert(root, 20);
+    root = insert(root, 30);
+    root = insert(root, 15);
+    root = insert(root, 25);
+    root = insert(root, 5);
+    root = insert(root, 100937128);
+    root = deleteBST(root, 100937128);
+
+    cout<<"--------------------------"<<endl;
+    
+    cout<<"Inorder traversal of the AVL tree: ";
+    inorder(root);
+    cout<<endl;
+    cout<<"-----------------------"<<endl;
+}
