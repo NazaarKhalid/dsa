@@ -1,0 +1,94 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* next;
+    Node* prev;
+    Node(int value) : data(value), next(nullptr), prev(nullptr) {}
+};
+
+Node* split(Node* head) {
+    Node* slow = head;
+    Node* fast = head;
+    while (fast->next && fast->next->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    Node* secondHalf = slow->next;
+    slow->next = nullptr;
+    if (secondHalf) {
+        secondHalf->prev = nullptr;
+    }
+    return secondHalf;
+}
+
+Node* merge(Node* first, Node* second) {
+    if (!first) return second;
+    if (!second) return first;
+    if (first->data <= second->data) {
+        first->next = merge(first->next, second);
+        first->next->prev = first;
+        first->prev = nullptr;
+        return first;
+    } else {
+        second->next = merge(first, second->next);
+        second->next->prev = second;
+        second->prev = nullptr;
+        return second;
+    }
+}
+
+Node* mergeSort(Node* head) {
+    if (!head || !head->next) {
+        return head;
+    }
+    Node* second = split(head);
+    head = mergeSort(head);
+    second = mergeSort(second);
+    return merge(head, second);
+}
+
+void append(Node*& head, int value) {
+    Node* newNode = new Node(value);
+    if (!head) {
+        head = newNode;
+        return;
+    }
+    Node* temp = head;
+    while (temp->next) {
+        temp = temp->next;
+    }
+    temp->next = newNode;
+    newNode->prev = temp;
+}
+
+void printList(Node* head) {
+    while (head) {
+        cout << head->data << " ";
+        head = head->next;
+    }
+    cout<<endl;
+}
+
+int main() {
+    Node* head = nullptr;
+
+    append(head, 10);
+    append(head, 20);
+    append(head, 8);
+    append(head, 17);
+    append(head, 5);
+    append(head, 13);
+    append(head, 4);
+
+    cout << "Original list: "<<endl;;
+    printList(head);
+
+    head = mergeSort(head);
+
+    cout << "Sorted list: "<<endl;
+    printList(head);
+
+    return 0;
+}
